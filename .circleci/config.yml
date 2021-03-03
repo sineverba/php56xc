@@ -3,7 +3,7 @@ jobs:
 
   build:
     docker:
-      - image: buildpacks-deps:groovy
+      - image: buildpack-deps:groovy
     steps:
       - checkout
       - run: docker build --tag sineverba/testphp56xc .
@@ -16,7 +16,7 @@ jobs:
 
   test-docker:
     docker:
-      - image: buildpacks-deps:groovy
+      - image: buildpack-deps:groovy
     steps:
       - attach_workspace:
           at: /tmp/workspace
