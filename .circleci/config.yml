@@ -3,7 +3,7 @@ jobs:
 
   build:
     docker:
-      - image: docker:20.10.5-git
+      - image: docker:20.10.5-dind-rootless
     steps:
       - checkout
       - run: docker build --tag sineverba/testphp56xc .
@@ -16,7 +16,7 @@ jobs:
 
   test-docker:
     docker:
-      - image: docker:20.10.5-git
+      - image: docker:20.10.5-dind-rootless
     steps:
       - attach_workspace:
           at: /tmp/workspace
