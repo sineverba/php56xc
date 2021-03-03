@@ -3,9 +3,10 @@ jobs:
 
   build:
     docker:
-      - image: docker:20.10.5-dind-rootless
+      - image: cimg/base:2021.03-20.04
     steps:
       - checkout
+      - setup_remote_docker
       - run: docker build --tag sineverba/testphp56xc .
       - run: mkdir -p ~/docker
       - run: docker save -o ~/docker/testphp56xc.tar sineverba/testphp56xc
@@ -16,7 +17,7 @@ jobs:
 
   test-docker:
     docker:
-      - image: docker:20.10.5-dind-rootless
+      - image: cimg/base:2021.03-20.04
     steps:
       - attach_workspace:
           at: /tmp/workspace
