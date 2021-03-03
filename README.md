@@ -7,6 +7,7 @@ php56xc: Docker image for PHP5.6.x + Xdebug + Composer
 | CD / CI   |           |
 | --------- | --------- |
 | Semaphore CI | [![Build Status](https://sineverba.semaphoreci.com/badges/php56xc/branches/master.svg)](https://sineverba.semaphoreci.com/projects/php56xc) |
+| Circle CI | [![CircleCI](https://circleci.com/gh/sineverba/php56xc.svg?style=svg)](https://circleci.com/gh/sineverba/php56xc) |
 
 
 Docker image built from **PHP5.6.x** CLI official + **X**debug + **C**omposer, multiarchitectures.
@@ -20,28 +21,10 @@ Do you use it? **Star it!**
 
 ## Versions
 
-| Component | Version |
-| --------- | ------- |
-| PHP | 5.6.40 |
-| Composer | 1.10.20 |
-| XDebug | 2.5.5 |
-
-## Architectures
-
-```
-linux/386
-linux/amd64
-linux/arm/v6
-linux/arm/v7
-```
-
-
-## Github / image tags vs PHP version
-
-| Github / Docker Image tag | PHP Version | Composer version | Multiple Architectures ? |
-| ------------------ | ----------- | ---------------- | ----------------------- |
-| latest | 5.6.40 | 1.10.20 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 5.6.40 | 5.6.40 | 1.10.20 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
+| Github / Docker Image tag | PHP Version | Composer version | XDebug | Multiple Architectures ? |
+| ------------------------- | ----------- | ---------------- | ------ | ------------------------ |
+| latest | 5.6.40 | 1.10.20 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.1.0 | 5.6.40 | 1.10.20 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
 
 
 ## OpCache and settings

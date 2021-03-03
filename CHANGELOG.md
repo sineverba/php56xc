@@ -1,4 +1,4 @@
-# Next version
+# 1.1.0
 + Add Semaphore CI
 + Add Circle CI
 
