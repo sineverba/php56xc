@@ -3,7 +3,7 @@ jobs:
 
   build:
     docker:
-      - image: cimg/base:2021.03-20.04
+      - image: docker:20.10.5-git
     steps:
       - checkout
       - run: docker build --tag sineverba/testphp56xc .
@@ -16,7 +16,7 @@ jobs:
 
   test-docker:
     docker:
-      - image: cimg/base:2021.03-20.04
+      - image: docker:20.10.5-git
     steps:
       - attach_workspace:
           at: /tmp/workspace
