@@ -1,0 +1,50 @@
+version: 2.1
+jobs:
+
+  build:
+    docker:
+      - image: cimg/base:2021.03-20.04
+    environment:
+      DOCKER_USERNAME: sineverba
+      DOCKER_IMAGE: php56x
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
+      - run: mkdir -p ~/docker
+      - run: docker save -o ~/docker/$DOCKER_IMAGE.tar $DOCKER_USERNAME/$DOCKER_IMAGE
+      - persist_to_workspace:
+          root: ~/docker
+          paths:
+            - .
+
+  test-docker:
+    docker:
+      - image: cimg/base:2021.03-20.04
+    environment:
+      DOCKER_USERNAME: sineverba
+      DOCKER_IMAGE: php56x
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run: ls -l /tmp/workspace
+      - run: docker load -i /tmp/workspace/$DOCKER_IMAGE.tar
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -v | grep 5.6.40
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -v | grep OPcache
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep xdebug
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -r "echo phpversion('xdebug');" | grep "2.5.5"
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep pdo_pgsql
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.20"
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "short_open_tag => Off => Off"
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "memory_limit => 512M => 512M"
+
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - test-docker:
+          requires:
+            - build
