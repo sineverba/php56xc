@@ -45,4 +45,6 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - test-docker
+      - test-docker:
+          requires:
+            - build
