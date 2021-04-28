@@ -11,7 +11,7 @@ test:
 		@docker run --rm sineverba/testphp56xc php -r "echo phpversion('xdebug');" | grep "2.5.5"
 		@docker run --rm sineverba/testphp56xc php -m | grep pdo_pgsql
 		@docker run --rm sineverba/testphp56xc php -m | grep zip
-		@docker run --rm sineverba/testphp56xc /usr/bin/composer -V | grep "1.10.21"
+		@docker run --rm sineverba/testphp56xc /usr/bin/composer -V | grep "1.10.22"
 		@docker run --rm sineverba/testphp56xc php -i | grep "short_open_tag => Off => Off"
 		@docker run --rm sineverba/testphp56xc php -i | grep "memory_limit => 512M => 512M"
 
