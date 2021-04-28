@@ -1,4 +1,7 @@
-# 1.2.0
+# Next version
++ Upgrade `composer` to 1.10.22
+
+## 1.2.0
 + Bump `composer` from 1.10.20 to 1.10.21
 
 ## 1.1.0
