@@ -1,4 +1,7 @@
-# 1.3.0
+# 1.4.0
++ Upgrade dependencies
+
+## 1.3.0
 + Upgrade `composer` to 1.10.22
 
 ## 1.2.0
