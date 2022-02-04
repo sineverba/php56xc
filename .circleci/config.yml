@@ -3,7 +3,7 @@ jobs:
 
   build:
     docker:
-      - image: cimg/base:2021.03-20.04
+      - image: cimg/base:2022.02
     environment:
       DOCKER_USERNAME: sineverba
       DOCKER_IMAGE: php56x
@@ -20,7 +20,7 @@ jobs:
 
   test-docker:
     docker:
-      - image: cimg/base:2021.03-20.04
+      - image: cimg/base:2022.02
     environment:
       DOCKER_USERNAME: sineverba
       DOCKER_IMAGE: php56x
@@ -35,7 +35,7 @@ jobs:
       - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep xdebug
       - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -r "echo phpversion('xdebug');" | grep "2.5.5"
       - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep pdo_pgsql
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.22"
+      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.25"
       - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "short_open_tag => Off => Off"
       - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "memory_limit => 512M => 512M"
 
