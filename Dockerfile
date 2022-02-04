@@ -4,7 +4,7 @@ FROM php:5.6.40-cli
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update -y && apt-get upgrade -y && apt-get install -y \
     git \
     curl \
     libpng-dev \
@@ -27,7 +27,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql mbstring exif pcntl bc
     && docker-php-ext-enable mysqli pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd opcache zip
 
 # Get latest Composer
-COPY --from=composer:1.10.22 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1.10.25 /usr/bin/composer /usr/bin/composer
 
 # Add custom ini files
 COPY config/10-shorttag.ini \
