@@ -39,8 +39,6 @@ blocks:
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.25"
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "short_open_tag => Off => Off"
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "memory_limit => 512M => 512M"
-      secrets:
-        - name: DOCKER_TOKEN
 
 promotions:
   - name: Deploy
