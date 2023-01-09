@@ -36,12 +36,12 @@ blocks:
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep xdebug
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -r "echo phpversion('xdebug');" | grep "2.5.5"
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep pdo_pgsql
-            - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.25"
+            - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.26"
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "short_open_tag => Off => Off"
             - docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "memory_limit => 512M => 512M"
 
 promotions:
   - name: Deploy
-    pipeline_file: production-deploy.yml
+    pipeline_file: build-deploy.yml
     auto_promote:
       when: "result = 'passed' and tag =~ '.*'"
