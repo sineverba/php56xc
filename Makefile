@@ -1,15 +1,19 @@
 IMAGE_NAME=sineverba/php56xc
 CONTAINER_NAME=php56xc
-APP_VERSION=1.5.0-dev
-BUILDX_VERSION=0.9.1
+APP_VERSION=1.6.0-dev
+BUILDX_VERSION=0.11.1
 BINFMT_VERSION=qemu-v7.0.0-28
 
 build:
-	docker build --tag $(IMAGE_NAME):$(APP_VERSION) .
+	docker build --tag $(IMAGE_NAME):$(APP_VERSION) "."
 
 preparemulti:
 	mkdir -vp ~/.docker/cli-plugins
-	curl -L "https://github.com/docker/buildx/releases/download/v$(BUILDX_VERSION)/buildx-v$(BUILDX_VERSION).linux-amd64" > ~/.docker/cli-plugins/docker-buildx
+	curl \
+		-L \
+		"https://github.com/docker/buildx/releases/download/v$(BUILDX_VERSION)/buildx-v$(BUILDX_VERSION).linux-amd64" \
+		> \
+		~/.docker/cli-plugins/docker-buildx
 	chmod a+x ~/.docker/cli-plugins/docker-buildx
 	docker buildx version
 	docker run --rm --privileged tonistiigi/binfmt:$(BINFMT_VERSION) --install all
@@ -19,7 +23,9 @@ preparemulti:
 	
 multi:
 	docker buildx inspect --bootstrap --builder multiarch
-	docker buildx build --platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 --tag $(IMAGE_NAME):$(APP_VERSION) --tag $(IMAGE_NAME):latest .
+	docker buildx build \
+		--platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 \
+		--tag $(IMAGE_NAME):$(APP_VERSION) "."
 
 test:
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -v | grep 5.6.40
@@ -33,4 +39,5 @@ test:
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -i | grep "memory_limit => 512M => 512M"
 
 destroy:
-	docker image rm $(IMAGE_NAME):$(APP_VERSION) $(IMAGE_NAME):latest
+	docker image rm $(IMAGE_NAME):$(APP_VERSION)
+	docker image rm php:5.6.40-cli

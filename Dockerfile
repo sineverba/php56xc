@@ -2,9 +2,13 @@ FROM php:5.6.40-cli
 
 # OpCache settings
 ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="0"
-
+# Update the repository, archived
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
 # Install system dependencies
-RUN apt-get update -y && apt-get upgrade -y && apt-get install -y \
+RUN apt-get update --allow-unauthenticated -y \
+    && apt-get upgrade --allow-unauthenticated -y \
+    && apt-get install --allow-unauthenticated -y \
+    apt-utils \
     git \
     curl \
     libpng-dev \
@@ -16,7 +20,15 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y \
     libpq-dev
 
 # Setup PHPXDebug
-RUN pecl install xdebug-2.5.5
+RUN cd /tmp && \
+    git clone https://github.com/xdebug/xdebug.git && \
+    cd xdebug && \
+    git checkout XDEBUG_2_5_5 && \
+    phpize && \
+    ./configure --enable-xdebug && \
+    make && \
+    make install && \
+    rm -rf /tmp/xdebug
 RUN docker-php-ext-enable xdebug
 
 # Clear cache
