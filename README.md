@@ -1,7 +1,7 @@
 php56xc: Docker image for PHP5.6.x + Xdebug + Composer
 ======================================================
 
-`docker pull sineverba/php56xc:1.6.0`
+`docker pull sineverba/php56xc:1.7.0`
 
 
 | CD / CI   |           |
@@ -23,7 +23,8 @@ Do you use it? **Star it!**
 
 | Github / Docker Image tag | PHP Version | Composer version | XDebug | Multiple Architectures ? |
 | ------------------------- | ----------- | ---------------- | ------ | ------------------------ |
-| latest | 5.6.40 | 1.10.26 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
+| latest | 5.6.40 | 1.10.27 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.7.0 | 5.6.40 | 1.10.27 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.6.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.5.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.4.0 | 5.6.40 | 1.10.25 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
@@ -46,7 +47,7 @@ services:
 
 ### Update local image
 
-`$ docker pull sineverba/php56xc:1.6.0`
+`$ docker pull sineverba/php56xc:1.7.0`
 
 
 ### PHP modules

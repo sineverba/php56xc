@@ -39,7 +39,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql mbstring exif pcntl bc
     && docker-php-ext-enable mysqli pdo pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd opcache zip
 
 # Get latest Composer
-COPY --from=composer:1.10.26 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1.10.27 /usr/bin/composer /usr/bin/composer
 
 # Add custom ini files
 COPY config/10-shorttag.ini \
