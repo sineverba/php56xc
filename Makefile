@@ -1,7 +1,7 @@
 IMAGE_NAME=sineverba/php56xc
 CONTAINER_NAME=php56xc
 APP_VERSION=1.6.0-dev
-BUILDX_VERSION=0.11.1
+BUILDX_VERSION=0.12.0
 BINFMT_VERSION=qemu-v7.0.0-28
 
 build:
@@ -34,7 +34,7 @@ test:
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -r "echo phpversion('xdebug');" | grep "2.5.5"
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -m | grep pdo_pgsql
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -m | grep zip
-	docker run --rm $(IMAGE_NAME):$(APP_VERSION) /usr/bin/composer -V | grep "1.10.26"
+	docker run --rm $(IMAGE_NAME):$(APP_VERSION) /usr/bin/composer -V | grep "1.10.27"
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -i | grep "short_open_tag => Off => Off"
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -i | grep "memory_limit => 512M => 512M"
 
