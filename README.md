@@ -8,6 +8,7 @@ php56xc: Docker image for PHP5.6.x + Xdebug + Composer
 | --------- | --------- |
 | Semaphore CI | [![Build Status](https://sineverba.semaphoreci.com/badges/php56xc/branches/master.svg)](https://sineverba.semaphoreci.com/projects/php56xc) |
 | Circle CI | [![CircleCI](https://circleci.com/gh/sineverba/php56xc.svg?style=svg)](https://circleci.com/gh/sineverba/php56xc) |
+| Docker Hub | `docker pull sineverba/php56xc:1.7.0` - [Link to image](https://hub.docker.com/r/sineverba/php56xc) |
 
 
 Docker image built from **PHP5.6.x** CLI official + **X**debug + **C**omposer, multiarchitectures.
@@ -23,14 +24,14 @@ Do you use it? **Star it!**
 
 | Github / Docker Image tag | PHP Version | Composer version | XDebug | Multiple Architectures ? |
 | ------------------------- | ----------- | ---------------- | ------ | ------------------------ |
-| latest | 5.6.40 | 1.10.27 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.7.0 | 5.6.40 | 1.10.27 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.6.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.5.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.4.0 | 5.6.40 | 1.10.25 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.3.0 | 5.6.40 | 1.10.22 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.2.0 | 5.6.40 | 1.10.21 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
-| 1.1.0 | 5.6.40 | 1.10.20 | 2.5.5 | linux/386,linux/amd64,linux/arm/v6,linux/arm/v7 |
+| latest | 5.6.40 | 1.10.27 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.7.0 | 5.6.40 | 1.10.27 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.6.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.5.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.4.0 | 5.6.40 | 1.10.25 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.3.0 | 5.6.40 | 1.10.22 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.2.0 | 5.6.40 | 1.10.21 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.1.0 | 5.6.40 | 1.10.20 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
 
 
 ## OpCache and settings
@@ -111,34 +112,10 @@ Zend OPcache
 ``` bash
 $ cd ~
 $ nano .bashrc
-$ alias php56='docker run -it -w /data -v ${PWD}:/data --entrypoint php --rm sineverba/php56xc:latest'
-$ alias composer56='docker run -it -w /data -v ${PWD}:/data --entrypoint "/usr/bin/composer" --rm sineverba/php56xc:latest'
+$ alias php56='docker run -it -w /data -v ${PWD}:/data --entrypoint php --rm sineverba/php56xc:1.7.0'
+$ alias composer56='docker run -it -w /data -v ${PWD}:/data --entrypoint "/usr/bin/composer" --rm sineverba/php56xc:1.7.0'
 ```
 
 ### Issues with memory limit (on composer)
 
 `$ php -d memory_limit=-1 /usr/bin/composer require [...]`
-
-#### Build and test image locally
-
-```shell
-$ make build
-$ make test
-$ make destroy
-```
-
-+ Check images list
-
-`$ docker image ls`
-
-+ Clone the project
-
-`$ git clone git@github.com:sineverba/php56xc.git`
-
-+ Run from same folder
-
-`$ docker build --tag php56xc:x.y.z .`
-
-+ Check new image (php56xc:x.y.z)
-
-`$ docker image ls`
