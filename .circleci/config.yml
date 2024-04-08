@@ -1,50 +1,158 @@
 version: 2.1
-jobs:
-
-  build:
-    docker:
-      - image: cimg/base:2023.12
+executors:
+  arm64_executor:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: arm.large
     environment:
-      DOCKER_USERNAME: sineverba
-      DOCKER_IMAGE: php56x
+      DOCKER_IMAGE: php56xc
+      BINFMT_VERSION: qemu-v7.0.0-28
+      COMPOSER_VERSION: 1.10.27
+  amd64_executor:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large
+    environment:
+      DOCKER_IMAGE: php56xc
+      BINFMT_VERSION: qemu-v7.0.0-28
+      COMPOSER_VERSION: 1.10.27
+      DELETE_TAG_TAG: 1.0.2
+jobs:
+  test:
+    executor: amd64_executor
     steps:
       - checkout
-      - setup_remote_docker
-      - run: docker build --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
-      - run: mkdir -p ~/docker
-      - run: docker save -o ~/docker/$DOCKER_IMAGE.tar $DOCKER_USERNAME/$DOCKER_IMAGE
-      - persist_to_workspace:
-          root: ~/docker
-          paths:
-            - .
-
-  test-docker:
-    docker:
-      - image: cimg/base:2023.12
-    environment:
-      DOCKER_USERNAME: sineverba
-      DOCKER_IMAGE: php56x
+      - run:
+          name: "Build image"
+          command: |
+            docker build \
+              --build-arg COMPOSER_VERSION=$COMPOSER_VERSION \
+              --tag $DOCKER_LOGIN/$DOCKER_IMAGE:test \
+              '.'
+      - run:
+          name: "Test image"
+          command: |
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -v | grep 5.6.40
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -v | grep OPcache
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -m | grep xdebug
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -r "echo phpversion('xdebug');" | grep "2.5.5"
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -m | grep pdo_pgsql
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test /usr/bin/composer -V | grep $COMPOSER_VERSION
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -i | grep "short_open_tag => Off => Off"
+            docker run --rm $DOCKER_LOGIN/$DOCKER_IMAGE:test php -i | grep "memory_limit => 512M => 512M"
+  build_arm64:
+    executor: arm64_executor
     steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run: ls -l /tmp/workspace
-      - run: docker load -i /tmp/workspace/$DOCKER_IMAGE.tar
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -v | grep 5.6.40
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -v | grep OPcache
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep xdebug
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -r "echo phpversion('xdebug');" | grep "2.5.5"
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -m | grep pdo_pgsql
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE /usr/bin/composer -V | grep "1.10.27"
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "short_open_tag => Off => Off"
-      - run: docker run --rm $DOCKER_USERNAME/$DOCKER_IMAGE php -i | grep "memory_limit => 512M => 512M"
-
-
+      - checkout
+      - run:
+          name: "Login to Docker HUB"
+          command: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+      - run:
+          name: "Install tonistiigi/binfmt"
+          command: docker run --rm --privileged tonistiigi/binfmt:$BINFMT_VERSION --install all
+      - run:
+          name: "Create buildx multiarch"
+          command: |
+            docker buildx create \
+            --name multiarch \
+            --use \
+            && docker buildx inspect \
+            --bootstrap \
+            --builder \
+            multiarch
+      - run:
+          name: "Build image and push to Docker HUB"
+          command: |
+            docker buildx build \
+              --cache-to=type=inline \
+              --platform linux/arm/v6,linux/arm/v7,linux/arm64 \
+              --build-arg COMPOSER_VERSION=$COMPOSER_VERSION \
+              --tag $DOCKER_LOGIN/$DOCKER_IMAGE:cache-arm \
+              --push \
+              '.'
+  build_amd64:
+    executor: amd64_executor
+    steps:
+      - checkout
+      - run:
+          name: "Login to Docker HUB"
+          command: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+      - run:
+          name: "Install tonistiigi/binfmt"
+          command: docker run --rm --privileged tonistiigi/binfmt:$BINFMT_VERSION --install all
+      - run:
+          name: "Create buildx multiarch"
+          command: |
+            docker buildx create \
+            --name multiarch \
+            --use \
+            && docker buildx inspect \
+            --bootstrap \
+            --builder \
+            multiarch
+      - run:
+          name: "Build image and push to Docker HUB"
+          command: |
+            docker buildx build \
+            --cache-from type=registry,ref=$DOCKER_LOGIN/$DOCKER_IMAGE:cache-arm \
+            --platform linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7 \
+            --build-arg COMPOSER_VERSION=$COMPOSER_VERSION \
+            --tag $DOCKER_LOGIN/$DOCKER_IMAGE:$CIRCLE_TAG \
+            --tag $DOCKER_LOGIN/$DOCKER_IMAGE:latest \
+            --push \
+            "."
+  delete_cache_arm:
+    executor: amd64_executor
+    steps:
+      - run:
+          name: "Login to Docker HUB"
+          command: docker login -u $DOCKER_LOGIN -p $DOCKER_PASSWORD
+      - run:
+          name: "Remove cache arm image"
+          command: |
+            docker run \
+            -it \
+            --rm \
+            --name $DOCKER_IMAGE \
+            -e DOCKER_USERNAME=$DOCKER_LOGIN \
+            -e DOCKER_PASSWORD=$DOCKER_PASSWORD \
+            -e ORGANIZATION=$DOCKER_LOGIN \
+            -e IMAGE=$DOCKER_IMAGE \
+            -e TAG=cache-arm \
+            sineverba/delete-tag:$DELETE_TAG_TAG
 workflows:
-  version: 2
-  build-deploy:
+  test_and_build_images:
     jobs:
-      - build
-      - test-docker:
+      - test:
+          context: SECRETS
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+      - build_arm64:
+          context: SECRETS
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - build_amd64:
+          context: SECRETS
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
           requires:
-            - build
+            - build_arm64
+      - delete_cache_arm:
+          context: SECRETS
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+          requires:
+            - build_amd64
+
