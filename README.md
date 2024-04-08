@@ -1,17 +1,15 @@
 php56xc: Docker image for PHP5.6.x + Xdebug + Composer
 ======================================================
 
-`docker pull sineverba/php56xc:1.7.0`
+> Docker image built from **PHP5.6.x** CLI official + **X**debug + **C**omposer, multiarchitectures.
 
 
 | CD / CI   |           |
 | --------- | --------- |
 | Semaphore CI | [![Build Status](https://sineverba.semaphoreci.com/badges/php56xc/branches/master.svg)](https://sineverba.semaphoreci.com/projects/php56xc) |
 | Circle CI | [![CircleCI](https://circleci.com/gh/sineverba/php56xc.svg?style=svg)](https://circleci.com/gh/sineverba/php56xc) |
-| Docker Hub | `docker pull sineverba/php56xc:1.7.0` - [Link to image](https://hub.docker.com/r/sineverba/php56xc) |
+| Docker Hub | `docker pull sineverba/php56xc:1.8.0` - [Link to image](https://hub.docker.com/r/sineverba/php56xc) |
 
-
-Docker image built from **PHP5.6.x** CLI official + **X**debug + **C**omposer, multiarchitectures.
 
 Short tags are __OFF__.
 
@@ -25,6 +23,7 @@ Do you use it? **Star it!**
 | Github / Docker Image tag | PHP Version | Composer version | XDebug | Multiple Architectures ? |
 | ------------------------- | ----------- | ---------------- | ------ | ------------------------ |
 | latest | 5.6.40 | 1.10.27 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
+| 1.8.0 | 5.6.40 | 1.10.27 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.7.0 | 5.6.40 | 1.10.27 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.6.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
 | 1.5.0 | 5.6.40 | 1.10.26 | 2.5.5 | linux/amd64,linux/arm/v6,linux/arm/v7 |
@@ -48,7 +47,7 @@ services:
 
 ### Update local image
 
-`$ docker pull sineverba/php56xc:1.7.0`
+`$ docker pull sineverba/php56xc:1.8.0`
 
 
 ### PHP modules
@@ -112,8 +111,8 @@ Zend OPcache
 ``` bash
 $ cd ~
 $ nano .bashrc
-$ alias php56='docker run -it -w /data -v ${PWD}:/data --entrypoint php --rm sineverba/php56xc:1.7.0'
-$ alias composer56='docker run -it -w /data -v ${PWD}:/data --entrypoint "/usr/bin/composer" --rm sineverba/php56xc:1.7.0'
+$ alias php56='docker run -it -w /data -v ${PWD}:/data --entrypoint php --rm sineverba/php56xc:1.8.0'
+$ alias composer56='docker run -it -w /data -v ${PWD}:/data --entrypoint "/usr/bin/composer" --rm sineverba/php56xc:1.8.0'
 ```
 
 ### Issues with memory limit (on composer)
