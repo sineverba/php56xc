@@ -1,11 +1,15 @@
 IMAGE_NAME=sineverba/php56xc
 CONTAINER_NAME=php56xc
-APP_VERSION=1.7.0-dev
-BUILDX_VERSION=0.12.0
+APP_VERSION=1.8.0-dev
+COMPOSER_VERSION=1.10.27
+BUILDX_VERSION=0.13.1
 BINFMT_VERSION=qemu-v7.0.0-28
 
 build:
-	docker build --tag $(IMAGE_NAME):$(APP_VERSION) "."
+	docker build \
+		--build-arg COMPOSER_VERSION=$(COMPOSER_VERSION) \
+		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		"."
 
 preparemulti:
 	mkdir -vp ~/.docker/cli-plugins
@@ -24,6 +28,7 @@ preparemulti:
 multi:
 	docker buildx inspect --bootstrap --builder multiarch
 	docker buildx build \
+		--build-arg COMPOSER_VERSION=$(COMPOSER_VERSION) \
 		--platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 \
 		--tag $(IMAGE_NAME):$(APP_VERSION) "."
 
@@ -34,7 +39,7 @@ test:
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -r "echo phpversion('xdebug');" | grep "2.5.5"
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -m | grep pdo_pgsql
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -m | grep zip
-	docker run --rm $(IMAGE_NAME):$(APP_VERSION) /usr/bin/composer -V | grep "1.10.27"
+	docker run --rm $(IMAGE_NAME):$(APP_VERSION) /usr/bin/composer -V | grep $(COMPOSER_VERSION)
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -i | grep "short_open_tag => Off => Off"
 	docker run --rm $(IMAGE_NAME):$(APP_VERSION) php -i | grep "memory_limit => 512M => 512M"
 
